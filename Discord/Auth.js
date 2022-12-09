@@ -7,7 +7,7 @@ const createParams = async (code) => {
   params.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
   params.append('grant_type', 'authorization_code');
   params.append('code', code);
-  params.append('redirect_uri', 'http://localhost:3000/kcsub');
+  params.append('redirect_uri', process.env.DISCORD_REDIRECT_URI);
   params.append('scope', 'identify%20connections');
 
   return params;
