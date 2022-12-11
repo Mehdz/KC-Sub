@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "Fira Sans";
+    src: url('fonts/fira/eot/FiraSans-Regular.eot');
+    src: url('fonts/fira/eot/FiraSans-Regular.eot') format('embedded-opentype'),
+        url('fonts/fira/woff2/FiraSans-Regular.woff2') format('woff2'),
+        url('fonts/fira/woff/FiraSans-Regular.woff') format('woff'),
+        url('fonts/fira/woff2/FiraSans-Regular.ttf') format('truetype');
+}
+
+body {
+    background-color: rgb(32, 34, 37);
+    font-family: "Fira Sans", "PT Sans", Calibri, Tahoma, sans-serif;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box div {
+    width: 50vh;
+    height: 50vh;
+}
+
+.title {
+    color: white;
+    text-align: center;
+}
+
+.text {
+    color: white;
+    text-align: center;
+}

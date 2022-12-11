@@ -26,17 +26,22 @@ export const getUserToken = async (code) => {
 
     return { access_token, token_type };
   } catch (error) {
-    console.log('[DISCORD AUTH]: Error', error.data);
+    console.log('[DISCORD AUTH]: Error', error.response.data.error_description);
   }
 };
 
 export const getUserData = async (access_token, token_type) => {
-  const response = await axios.get('https://discord.com/api/users/@me/connections', {
-    headers: {
-      authorization: `${token_type} ${access_token}`,
-      'Accept-Encoding': 'gzip,deflate,compress'
-    }
-  });
+  try {
+    const response = await axios.get('https://discord.com/api/users/@me/connections', {
+      headers: {
+        authorization: `${token_type} ${access_token}`,
+        'Accept-Encoding': 'gzip,deflate,compress'
+      }
+    });
+    const data = response.data.find(obj => obj.type === 'twitch');
 
-  console.log(response.data);
+    return data?.name;
+  } catch (error) {
+    console.log('[DISCORD AUTH]: Error', error.response.data.error_description);
+  }
 };
