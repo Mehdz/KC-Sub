@@ -1,18 +1,3 @@
-// const ranks = {
-//   1: 'OEUF',
-//   3: 'TETARD',
-//   6: 'POISSON ROUGE',
-//   9: 'POISSON VERT',
-//   12: 'POISSON OR',
-//   18: 'POISSON OR/DIAMANT',
-//   24: 'POISSON DIAMANT',
-//   30: 'POISSON DIAMANT/RUBY',
-//   36: 'POISSON RUBY',
-//   42: 'POISSON NOIR',
-//   48: 'LEVIATHOR',
-//   60: 'LEVIATHOR ROUGE',
-// };
-
 const ranks = {
   1: '1050654724489236500',
   3: '1050656149239767070',
