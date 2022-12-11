@@ -1,28 +1,23 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import initTwitchBot from './Twitch/Bot.js';
-import initDiscordBot, { compareUserData, sendDm } from './Discord/Bot.js';
-import { getUserData, getUserToken } from './Discord/Auth.js';
-import mongoose from 'mongoose';
+import initTwitchBot from './Sources/Twitch/Bot.js';
+import initDiscordBot, { compareUserData, sendDm } from './Sources/Discord/Bot.js';
+import { getUserData, getUserToken } from './Sources/Discord/Auth.js';
+import initDatabase from './Sources/Database/Database.js';
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
-
-await mongoose
-  .connect(
-    process.env.MONGODB,
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log('[MongoDB]: Connected'))
-  .catch(err => console.log(err));
+const rootPathClient = './Sources/Client/';
 
 let userData = {};
 
+await initDatabase();
+
 app.use(express.json());
 
-app.use(express.static('./Client/'));
+app.use(express.static(rootPathClient));
 
 app.post('/kcsub', (request, response) => {
   try {
@@ -45,10 +40,10 @@ app.get('/kcsub', async (request, response) => {
     userData.twitchVerification = await getUserData(access_token, token_type);
     await compareUserData(userData);
     sendDm(userData.discord);
-    response.sendFile('index.html', { root: './Client/' });
+    response.sendFile('index.html', { root: rootPathClient });
   } catch (error) {
     console.log(`[Webhook] GET: ${error}`);
-    response.sendFile('error.html', { root: './Client/' });
+    response.sendFile('error.html', { root: rootPathClient });
   }
 });
 
