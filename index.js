@@ -3,11 +3,21 @@ import * as dotenv from 'dotenv';
 import initTwitchBot from './Twitch/Bot.js';
 import initDiscordBot, { compareUserData, sendDm } from './Discord/Bot.js';
 import { getUserData, getUserToken } from './Discord/Auth.js';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
+
+await mongoose
+  .connect(
+    process.env.MONGODB,
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log('[MongoDB]: Connected'))
+  .catch(err => console.log(err));
+
 let userData = {};
 
 app.use(express.json());
