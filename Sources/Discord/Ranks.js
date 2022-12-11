@@ -14,18 +14,22 @@ const ranks = {
 };
 
 export const rankSorter = async (rank) => {
-  const findClosest = (arr = [], target = 1) => {
-    const size = 2;
+  try {
+    const findClosest = (arr, target) => {
+      const size = 2;
 
-    const result = arr.sort((a, b) => {
-      if (Math.abs(a - target) === Math.abs(b - target))
-        return a - b;
-      return Math.abs(a - target) - Math.abs(b - target);
-    }).slice(0, size)
-      .sort((a, b) => a - b);
-    return result[0];
-  };
+      const result = arr.sort((a, b) => {
+        if (Math.abs(a - target) === Math.abs(b - target))
+          return a - b;
+        return Math.abs(a - target) - Math.abs(b - target);
+      }).slice(0, size)
+        .sort((a, b) => a - b);
+      return result[0];
+    };
 
-  const badge = findClosest(ranks, rank);
-  return ranks[badge];
+    const badge = findClosest([1, 3, 6, 9, 12, 18, 24, 30, 36, 42, 48, 60], rank);
+    return ranks[badge];
+  } catch (error) {
+    console.log('[RANKS]:', error);
+  }
 };
