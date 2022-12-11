@@ -1,17 +1,16 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import initTwitchBot from './Sources/Twitch/Bot.js';
-import initDiscordBot, { compareUserData, sendDm } from './Sources/Discord/Bot.js';
+import initDiscordBot, { sendDm, updateUserDiscordRank } from './Sources/Discord/Bot.js';
 import { getUserData, getUserToken } from './Sources/Discord/Auth.js';
 import initDatabase from './Sources/Database/Database.js';
+import { compareUserData } from './Sources/Database/Queries.js';
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
 const rootPathClient = './Sources/Client/';
-
-let userData = {};
 
 await initDatabase();
 
@@ -24,11 +23,9 @@ app.post('/kcsub', (request, response) => {
     const { body } = request;
 
     response.json({ status: 'success' });
-    console.log(body);
-    userData = body;
-    sendDm(userData.discord);
+    sendDm(body.discordTag);
   } catch (error) {
-    console.log(`[Webhook] POST: ${error}`);
+    console.log(`[WEBHOOK] POST: ${error}`);
   }
 });
 
@@ -36,19 +33,21 @@ app.get('/kcsub', async (request, response) => {
   try {
     const { code } = request.query;
     const { access_token, token_type } = await getUserToken(code);
+    const twitchVerification = await getUserData(access_token, token_type);
 
-    userData.twitchVerification = await getUserData(access_token, token_type);
-    await compareUserData(userData);
-    sendDm(userData.discord);
-    response.sendFile('index.html', { root: rootPathClient });
+    if (await compareUserData(twitchVerification) == true) {
+      await updateUserDiscordRank(twitchVerification);
+      response.sendFile('index.html', { root: rootPathClient });
+    } else
+      throw new Error('User has not been found');
   } catch (error) {
-    console.log(`[Webhook] GET: ${error}`);
+    console.log(`[WEBHOOK] GET: ${error}`);
     response.sendFile('error.html', { root: rootPathClient });
   }
 });
 
 app.listen(port, () => {
-  console.log(`[Webhook]: listening at http://127.0.0.1:${port}`);
+  console.log(`[WEBHOOK]: listening at http://127.0.0.1:${port}`);
 });
 
 await initTwitchBot();

@@ -13,7 +13,6 @@ const createParams = async (code) => {
   return params;
 };
 
-
 export const getUserToken = async (code) => {
   try {
     const response = await axios.post('https://discord.com/api/oauth2/token', await createParams(code),

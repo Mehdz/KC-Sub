@@ -1,4 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
+import { getUser } from '../Database/Queries.js';
+import { rankSorter } from './Ranks.js';
 
 const client = new Client({
   intents: [
@@ -9,13 +11,6 @@ const client = new Client({
   ],
 });
 
-export const compareUserData = async (userData) => {
-  const { twitch, twitchVerification } = userData;
-
-  if (twitch === twitchVerification)
-    return true;
-  return false;
-};
 
 const createParams = async () => {
   const params = new URLSearchParams();
@@ -28,9 +23,24 @@ const createParams = async () => {
   return params;
 };
 
+export const updateUserDiscordRank = async (twitchName) => {
+  try {
+    const user = await getUser(twitchName);
+    const guild = await client.guilds.fetch(process.env.DISCORD_GUILD_ID);
+    const members = await guild.members.fetch();
+    const discordTag = user.discordTag.split('#');
+    const discordUserData = members.find(member => member.user.username === discordTag[0] && member.user.discriminator === discordTag[1]);
+    const rank = await rankSorter(user?.subscription);
+
+    discordUserData.roles.add(rank);
+  } catch (error) {
+    console.log('[RANKS]:', error);
+  }
+};
+
 export const sendDm = async (discordtag) => {
   try {
-    const guild = await client.guilds.fetch('882211657005269053');
+    const guild = await client.guilds.fetch(process.env.DISCORD_GUILD_ID);
     const members = await guild.members.fetch();
     const user = members.find(member => member.user.username === discordtag.split('#')[0] && member.user.discriminator === discordtag.split('#')[1]);
     const uri = 'https://discord.com/api/oauth2/authorize?' + await createParams();
