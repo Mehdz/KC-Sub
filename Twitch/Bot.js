@@ -1,6 +1,6 @@
 import { Client } from 'tmi.js';
 import axios from 'axios';
-import { addUser } from '../../Database/Queries.js';
+import { addUser } from '../Database/Queries.js';
 
 const getBody = async (tags, discord) => {
   const body = {
