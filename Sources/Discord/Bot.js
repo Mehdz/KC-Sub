@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import { getUser } from '../Database/Queries.js';
+import { deleteUser, getUser } from '../Database/Queries.js';
 import { rankSorter } from './Ranks.js';
 
 const client = new Client({
@@ -32,7 +32,8 @@ export const updateUserDiscordRank = async (twitchName) => {
     const discordUserData = members.find(member => member.user.username === discordTag[0] && member.user.discriminator === discordTag[1]);
     const rank = await rankSorter(user?.subscription);
 
-    discordUserData.roles.add(rank);
+    await discordUserData.roles.add(rank);
+    await deleteUser(user.twitchName);
   } catch (error) {
     console.log('[RANKS]:', error);
   }
