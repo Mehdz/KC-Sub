@@ -44,9 +44,9 @@ export const sendDm = async (discordtag) => {
     const members = await guild.members.fetch();
     const user = members.find(member => member.user.username === discordtag.split('#')[0] && member.user.discriminator === discordtag.split('#')[1]);
     const uri = 'https://discord.com/api/oauth2/authorize?' + await createParams();
+    const message = 'Salut, afin de t\'attribuer ton rôle en fonction de ton badge d\'abonnement, nous avons besoin de vérifier que ton compte Twitch est bien lié à Discord.\nNous récolterons uniquement le tag Discord (Pseudo#0000) ainsi que ton pseudo Twitch.\nAucune de tes données ne sera conservée, une fois, le rôle attribué !\nClique sur le lien ci-dessous pour t\'authentifier.\n';
 
-    await user.send('Salut, bla bla bla bla!');
-    await user.send(uri);
+    await user.send(message + uri);
   } catch (error) {
     console.log('[DISCORD]: ', error);
   }

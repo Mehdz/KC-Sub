@@ -18,12 +18,12 @@ app.use(express.json());
 
 app.use(express.static(rootPathClient));
 
-app.post('/kcsub', (request, response) => {
+app.post('/kcsub', async (request, response) => {
   try {
     const { body } = request;
 
     response.json({ status: 'success' });
-    sendDm(body.discordTag);
+    await sendDm(body.discordTag);
   } catch (error) {
     console.log(`[WEBHOOK] POST: ${error}`);
   }
