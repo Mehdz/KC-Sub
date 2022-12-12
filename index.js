@@ -5,6 +5,7 @@ import initDiscordBot, { sendDm, updateUserDiscordRank } from './Sources/Discord
 import { getUserData, getUserToken } from './Sources/Discord/Auth.js';
 import initDatabase from './Sources/Database/Database.js';
 import { compareUserData } from './Sources/Database/Queries.js';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ const rootPathClient = './Sources/Client/';
 await initDatabase();
 
 app.use(express.json());
+app.use(helmet());
+app.disable('x-powered-by');
 
 app.use(express.static(rootPathClient));
 
@@ -44,6 +47,15 @@ app.get('/kcsub', async (request, response) => {
     console.log(`[WEBHOOK] GET: ${error}`);
     response.sendFile('error.html', { root: rootPathClient });
   }
+});
+
+app.use((request, response) => {
+  response.sendFile('error.html', { root: rootPathClient });
+});
+
+app.use((error, request, response) => {
+  console.error(error.stack);
+  response.sendFile('error.html', { root: rootPathClient });
 });
 
 app.listen(port, () => {
