@@ -40,7 +40,7 @@ app.get('/kcsub', async (request, response) => {
 
     if (await compareUserData(twitchVerification) == true) {
       await updateUserDiscordRank(twitchVerification);
-      response.sendFile('index.html', { root: rootPathClient });
+      response.sendFile('success.html', { root: rootPathClient });
     } else
       throw new Error('User has not been found');
   } catch (error) {
@@ -49,12 +49,7 @@ app.get('/kcsub', async (request, response) => {
   }
 });
 
-app.use((request, response) => {
-  response.sendFile('error.html', { root: rootPathClient });
-});
-
-app.use((error, request, response) => {
-  console.error(error.stack);
+app.get('*', async (request, response) => {
   response.sendFile('error.html', { root: rootPathClient });
 });
 
