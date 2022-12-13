@@ -27,6 +27,8 @@ export const rankSorter = async (rank) => {
       return result[0];
     };
 
+    if (rank >= 60)
+      return badge[60];
     const badge = findClosest([1, 3, 6, 9, 12, 18, 24, 30, 36, 42, 48, 60], rank);
     return ranks[badge];
   } catch (error) {
