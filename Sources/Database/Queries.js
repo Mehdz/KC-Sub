@@ -9,7 +9,7 @@ export const addUser = async (twitchName, discordTag, subscription) => {
     const foundUser = await User.findOne({ twitchName: twitchName });
 
     if (foundUser && foundUser?.twitchName)
-      return;
+      await deleteUser(twitchName);
 
     const newUser = new User({
       twitchName: twitchName.toLowerCase(),
@@ -44,7 +44,7 @@ export const deleteUser = async (twitchName) => {
       return;
 
     await User.deleteOne({ _id: user._id });
-    console.log('[DATABASE]: User deleted.');
+    console.log(`[DATABASE]: User ${twitchName} deleted.`);
   } catch (error) {
     console.log('[DATABASE]:', error);
   }
@@ -53,7 +53,6 @@ export const deleteUser = async (twitchName) => {
 export const compareUserData = async (twitchVerification) => {
   const user = await User.findOne({twitchName: twitchVerification});
 
-  console.log(await User.find());
   if (user) {
     console.log('[DATABASE]: User has been found.');
     return true;

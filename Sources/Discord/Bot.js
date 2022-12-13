@@ -33,6 +33,8 @@ export const updateUserDiscordRank = async (twitchName) => {
     const rank = await rankSorter(user?.subscription);
 
     await discordUserData.roles.add(rank);
+    await discordUserData.send('Un rôle t\'a été attribué en fonction de ton badge d\'abonnement Twitch !\nTu peux maintenant te rendre dans les PARAMÈTRES de ton compte Discord, puis dans la section "Application autorisées" pour supprimer l\'application "KC Sub".');
+    await discordUserData.send('Si tu n\'as pas reçu ton rôle, c\'est qu\'aucun compte Twitch n\'est lié à ton compte Discord.');
     await deleteUser(user.twitchName);
   } catch (error) {
     console.log('[RANKS]:', error);
